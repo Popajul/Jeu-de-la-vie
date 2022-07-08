@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeGameBlazor", "LifeGameBlazor.csproj", "{A716B6E0-8DD2-441B-A604-931BE8CD25BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeGameClasses", "..\LifeGameClasses\LifeGameClasses.csproj", "{A4C4F551-C5EC-40C4-9FEF-AFF7691FCD59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A716B6E0-8DD2-441B-A604-931BE8CD25BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A716B6E0-8DD2-441B-A604-931BE8CD25BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A716B6E0-8DD2-441B-A604-931BE8CD25BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A716B6E0-8DD2-441B-A604-931BE8CD25BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C4F551-C5EC-40C4-9FEF-AFF7691FCD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C4F551-C5EC-40C4-9FEF-AFF7691FCD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C4F551-C5EC-40C4-9FEF-AFF7691FCD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C4F551-C5EC-40C4-9FEF-AFF7691FCD59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59EC181E-6598-4680-952C-B1EB65C879BC}
+	EndGlobalSection
+EndGlobal

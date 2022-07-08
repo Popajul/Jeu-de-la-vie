@@ -1,0 +1,228 @@
+﻿@page "/"
+@using LifeGameClasses.Classes
+
+
+<div class="controls">
+    <label>Age :</label> <input type="range" max="@Age" min="0" step="1" @bind-value="@CurrentAge" @onclick="DisplayAge" @onkeyup="DisplayAge" /> @CurrentAge
+
+    <label>Speed :</label>  <input id="input-speed" type="range" max="1000" min="1" step="1" @bind-value="@delay">
+    <label> Cell Size :</label> <input type="range" max="20" min="2" step="1" @bind-value="@cellSize">
+    <label> Cell Radius :</label> <input type="range" max="50" min="0" step="1" @bind-value="@cellRadius"><br />
+    <label> column number : </label><input type="number" @bind-value="@x" />
+    <label> line number : </label><input type="number" @bind-value="@y" /> <button @onclick='Erase'>OK</button><br />
+    <label> Birth rate for random generation  : </label><input type="number" step="10" min="0" max="100" @bind-value="@birthRate" /> %
+</div>
+
+<div class="grid-container">
+    @foreach (var ligne in organisme)
+    {
+        <div class="line-container">
+            @foreach (var cellule in ligne)
+            {
+                @if (cellule.isAlive && cellule.MustBeDisplay)
+                {
+                    <div class="cellule cellule-alive" @onclick='e=>SwitchLife(cellule)'></div>
+                }
+                @if (!cellule.isAlive && cellule.MustBeDisplay)
+                {
+                    <div class="cellule cellule-dead" @onclick='e=>SwitchLife(cellule)'></div>
+                }
+            }
+        </div>
+    }
+    <div class="boutton">
+        <button @onclick='Random'>?</button>
+        <button @onclick='StartSimulation'>|></button>
+        <button @onclick='Next'>+1</button>
+        <button @onclick='Previous'>-1</button>
+        <button @onclick='Pause'>||</button>
+        <button @onclick='Erase'>X</button>
+
+    </div>
+</div>
+
+
+<style>
+
+    .grid-container {
+        padding: 10px 10px 5px 10px;
+        margin: auto;
+        background-color: beige;
+        font-family: 'Comic Sans MS';
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .line-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .cellule {
+        width: @cellSizeCssFormat;
+        height: @cellSizeCssFormat;
+        border: solid 0.3px lightgrey;
+        border-radius: @cellRadiusCssFormat;
+    }
+
+    .cellule-alive {
+        background-color: black;
+    }
+
+    .cellule-dead {
+        background-color: rgb(252, 186, 3); /*rgb(178, 191, 191);*/
+    }
+
+    .controls {
+        font-family: 'Comic Sans MS';
+        border-radius: 20px;
+        background-color: rgb(252, 186, 3); /*rgb(178, 191, 191);*/
+        z-index: 10;
+        position: relative;
+        bottom: 10px;
+        margin: 20px auto 0px auto;
+        width: fit-content;
+    }
+
+    button {
+        border-radius: 50%;
+        background-color: rgb(178, 191, 191);
+        margin: 10px;
+        border: 2px double rgb(25, 25, 25);
+    }
+
+        button:hover {
+            border-radius: 30%;
+            box-shadow: 3px 4px beige;
+        }
+
+    .boutton {
+        background-color: black;
+        margin: 10px auto 5px auto;
+    }
+
+    label {
+        margin: 10px;
+    }
+
+    #input-speed {
+        transform: rotate(-180deg);
+    }
+</style>
+@code {
+    #region Properties
+    private const int margin = 20;
+    int delay = 1;
+    int Age = 0;
+    public int CurrentAge = 0;
+    bool Suspend = true;
+    int x { get; set; } = 30;
+    int y { get; set; } = 30;
+    int birthRate { get; set; } = 30;
+    double cellSize = 10;
+    string cellSizeCssFormat { get => $"{cellSize}px"; }
+    int cellRadius = 0;
+    string cellRadiusCssFormat { get => $"{cellRadius}%"; }
+    List<Organisme> organismes { get; set; }
+    Organisme organisme { get; set; }
+    #endregion
+
+
+    protected override void OnInitialized()
+    {
+        Age = 0;
+        CurrentAge = 0;
+        Suspend = true;
+        organisme = new Organisme(x, y, margin, true);
+        organismes = new List<Organisme>();
+    }
+
+
+    #region Component Methods
+    private void SwitchLife(Cellule cellule) => cellule.isAlive = !cellule.isAlive;
+
+    private void Previous()
+    {
+        Suspend = true;
+        if (CurrentAge >= 1)
+        {
+            CurrentAge -= 1;
+            organisme = organismes[CurrentAge];
+            StateHasChanged();
+        }
+    }
+    private void DisplayAge()
+    {
+        if (Age == 0)
+            return;
+        Suspend = true;
+        organisme = organismes[CurrentAge];
+        StateHasChanged();
+    }
+    private void Next()
+    {
+        Suspend = true;
+        IterateDependingCase();
+        StateHasChanged(); // force le déclenchement du rendu du composant
+    }
+
+    private async Task StartSimulation()
+    {
+        Suspend = false;
+
+        while (!Suspend)
+        {
+            IterateDependingCase();
+            Console.WriteLine("FIN DE CALCUL D ITERATION");
+            this.StateHasChanged();
+            await Task.Delay(delay);
+            Console.WriteLine("FIN RENDU COMPOSANT");
+
+        }
+
+    }
+
+    private void IterateDependingCase()
+    {
+        if (Age == 0)
+        {
+            organismes.Add(organisme.Duplicate());
+        }
+        if (CurrentAge == Age)
+        {
+            CurrentAge++;
+            Age++;
+            organisme.GenerateNext();
+            organismes.Add(organisme.Duplicate());
+        }
+        else
+        {
+            CurrentAge++;
+            organisme = organismes[CurrentAge];
+        }
+    }
+
+    private void Erase()
+    {
+        this.OnInitialized();
+        Console.WriteLine("OnInitialize done");
+    }
+
+    private void Random()
+    {
+        this.OnInitialized();
+        organisme.InitializeRandomly(birthRate);
+    }
+
+    private void Pause()
+    {
+        Suspend = true;
+    }
+    #endregion
+
+}
+

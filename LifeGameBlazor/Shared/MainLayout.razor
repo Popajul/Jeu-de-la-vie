@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+    <div class="page">
+        <div class="aside">
+            <NavMenu />
+        </div>
+
+        <main>
+            <article class="content px-5">
+                @Body
+            </article>
+        </main>
+    </div>
+
+<style>
+
+    .page{
+        width:100%;
+        height:1000px;
+        background-color:black;/*rgb(83, 1, 1);*/
+    }
+    .aside{
+        width:0px;
+    }
+</style>
