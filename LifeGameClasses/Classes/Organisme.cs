@@ -44,7 +44,7 @@ namespace LifeGameClasses.Classes
         {
             Random random = new Random();
             Parallel.ForEach(this.SelectMany(l => l.Where(c => c.MustBeDisplay)).ToList(),c=>
-                c.isAlive = (random.Next(10) >= birthRate / 10) ? false : true);
+                c.isAlive = ((float)random.Next(10) >= (float)birthRate /(float) 10) ? false : true);
         }
         
         /// <summary>
@@ -63,19 +63,6 @@ namespace LifeGameClasses.Classes
                 c.isInLifeNext = null;
             });
 
-        }
-        public async Task GenerateNextAsync()
-        {
-            Console.WriteLine("generate next iteration");
-            var liste = GetCellulesCouldBeNextAlive();
-            Console.WriteLine($"Calculate iteration for {liste.Count} cells");
-            await Task.Run(()=>SetCelluleIsInlifeNext(liste));
-
-            Parallel.ForEach(liste, c =>
-            {
-                c.isAlive = c.isInLifeNext ?? false;
-                c.isInLifeNext = null;
-            });
         }
 
         public void KillAll()
